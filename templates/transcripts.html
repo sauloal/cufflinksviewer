@@ -1,0 +1,60 @@
+
+{% for fileType in transcriptData.getFileTypes(transcriptName) %}
+    <div class="row-fluid">
+        <div class="span11 offset1 fileType{{ fileType }}">
+            <div class="row-fluid">
+                <div class="span12">
+                    <h5>{{ fileType.upper() }}</h5>
+                </div>
+            </div>
+
+            {% set regCount = 0 %}
+            {% for regNum in transcriptData.getRegNums(transcriptName, fileType) %}
+                {% set regCount = regCount + 1 %}
+            <div class="row-fluid">
+                <div class="span11 offset1 regNum{{ fileType }}{{regCount}}">
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <h6 class="h6big"># {{ regNum }}</h6>
+                        </div>
+                    </div>
+
+                    <div class="row-fluid"> <!-- start vals row 1 -->
+                    {% set counter = 0 %}
+                    {% for key in transcriptData.getHeaders(fileType) if key not in ( "details", "dot", "program", "thousand", "type", "chr", "Contig", "FMI", "frac") %}
+                        {% set value = transcriptData.getValue(transcriptName, fileType, regNum, key) %}
+
+
+                        {% if (counter % 5) == 0 %}
+                            {% if counter != 0 %}
+                                </div> <!-- end vals row 1 -->
+
+                                <div class="row-fluid"> <!-- start vals row 2-->
+                            {% endif %}
+                        {% endif %}
+
+
+                        {% if key in ["Description1","Description2", "Accession1", "Accession2"] %}
+                            <div class="span4"> <!-- start dial cell -->
+                                <p class="keyname">{{ key }}</p>
+                                {{ value }}
+                            </div>
+                            {% set counter = counter + 1 %}
+                        {% else %}
+                            <div class="span2"> <!-- start dial cell -->
+                                <p class="keyname">{{ key }}</p>
+                                {{ value }}
+                            </div>
+                        {% endif %}
+
+                        {% set counter = counter + 1 %}
+                    {% endfor %}
+
+
+                    </div> <!-- end vals row graph -->
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endfor %}

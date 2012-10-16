@@ -1,0 +1,171 @@
+<!--<ul class="nav nav-tabs" id="myTab">-->
+<!--{% for filetype in g.headersNames %}-->
+<!--  <li><a href="#{{ filetype }}">{{ filetype }}</a></li>-->
+<!--{% endfor %}-->
+<!--</ul>-->
+{% set spansize = "input-large" %}
+<div class="tab-content">
+    {% for filetype in g.headersNames %}
+        <div class="tab-pane" id="{{ filetype }}">
+            <!--<div class="row">-->
+            <!--    <div class="span12">-->
+            <!--        <h3>{{ filetype }}</h3>-->
+            <!--    </div>-->
+            <!--</div> <!-- end header row -->
+
+            <div class="row-fluid"> <!-- start dials row 1 -->
+                {% set counter = 0 %}
+                {% for headername in g.colsNames[filetype] %}
+                    {% if (counter % 4) == 0 %}
+                        {% if counter != 0 %}
+            </div> <!-- end dials row 1 -->
+
+            <div class="row-fluid"> <!-- start dials row 2-->
+                        {% endif %}
+                    {% endif %}
+
+                <div class="span3"> <!-- start dial cell -->
+                    {% set fieldData       = g.headers[filetype][headername][0] %}
+                    {% set fieldType       = g.headers[filetype][headername][1] %}
+                    {% set headernameshort = headername.replace(" ", "")        %}
+                    <h6>{{ headername }}
+                    {% if fieldType == 'rangeminlog' or fieldType == 'rangemin' or fieldType == 'rangeminmax' or fieldType == 'rangeminmaxlog' %}
+                    <small>({{ fieldData[0] }} - {{ fieldData[1] }})</small>
+                    {% endif %}
+
+                    {% if fieldType == 'rangeminlog' %}
+                    <i class="icon-signal"></i>
+                    {% endif %}
+                    </h6>
+
+
+
+                    {% if fieldType == 'select' or fieldType == 'selectmultiple'%}
+                        {% set multiple = "" %}
+                        {% if fieldType == 'selectmultiple'%}
+                            {% set multiple = 'multiple="multiple"' %}
+                        {% endif %}
+                        <select name="{{filetype}}{{headernameshort}}" id="{{filetype}}{{headernameshort}}" class="{{spansize}} qryfield" dft="" filetype="{{filetype}}" headername="{{headernameshort}}" {{multiple}} style="color:#F6931F">
+                            <option selected value=""></option>
+                            {% for value in fieldData %}
+                            <option value="{{ value }}">{{ value }}</option>
+                            {% endfor %}
+                        </select>
+                    {% endif %}
+
+
+
+                    {% if fieldType == 'input' %}
+                        <input type="text" placeholder="Text input" name="{{filetype}}{{headernameshort}}" id="{{filetype}}{{headernameshort}}"  class="{{spansize}} qryfield" dft="" filetype="{{filetype}}" headername="{{headernameshort}}" style="color:#F6931F"/>
+                    {% endif %}
+
+
+
+                    {% if fieldType == 'rangeminlog' %}
+                            <div id="slider{{filetype}}{{headernameshort}}" class="{{spansize}}"></div>
+                            <input type="text" name="{{filetype}}{{headernameshort}}" id="{{filetype}}{{headernameshort}}" class="{{spansize}} qryfield rangelabel" dft="{{ fieldData[0] }}" filetype="{{filetype}}" headername="{{headernameshort}}" style="color:#F6931F"/>
+
+                            <script>
+                                $(function() {
+                                    $( "#slider{{filetype}}{{headernameshort}}" ).slider({
+                                        range: "min",
+                                        min  : {{ fieldData[0] }},
+                                        max  : {{ fieldData[1] }} / 2,
+                                        value: {{ fieldData[0] }},
+                                        slide: function( event, ui ) {
+                                            $( "#{{filetype}}{{headernameshort}}" ).val( Number(expon(ui.value, {{ fieldData[0] }}, {{ fieldData[1] }})).toFixed(0));
+                                        }
+                                    });
+                                    $( "#{{filetype}}{{headernameshort}}" ).val( Number(expon($( "#slider{{filetype}}{{headernameshort}}" ).slider( "value" ), {{ fieldData[0] }}, {{ fieldData[1] }})).toFixed(0) );
+                                });
+                            </script>
+                    {% endif %}
+
+
+                    {% if fieldType == 'rangemin' %}
+                        <div id="slider{{filetype}}{{headernameshort}}" class="{{spansize}}"></div>
+                        <input type="text" name="{{filetype}}{{headernameshort}}" id="{{filetype}}{{headernameshort}}" class="{{spansize}} qryfield rangelabel" dft="{{ fieldData[0] }}" filetype="{{filetype}}" headername="{{headernameshort}}" style="color:#F6931F"/>
+
+                        <script>
+                                $(function() {
+                                    $( "#slider{{filetype}}{{headernameshort}}" ).slider({
+                                        range: "min",
+                                        min  : {{ fieldData[0] }},
+                                        max  : {{ fieldData[1] }},
+                                        value: {{ fieldData[0] }},
+                                        slide: function( event, ui ) {
+                                            $( "#{{filetype}}{{headernameshort}}" ).val( ui.value );
+                                        }
+                                    });
+                                    $( "#{{filetype}}{{headernameshort}}" ).val( $( "#slider{{filetype}}{{headernameshort}}" ).slider( "value" ) );
+                                });
+                            </script>
+                    {% endif %}
+
+
+
+
+
+                    {% if fieldType == 'rangeminmax' %}
+                        <div id="slider{{filetype}}{{headernameshort}}" class="{{spansize}}"></div>
+                        <input type="text" name="{{filetype}}{{headernameshort}}" id="{{filetype}}{{headernameshort}}" class="{{spansize}} qryfield rangelabel" dft="{{ fieldData[0] }} - {{ fieldData[1] }}" filetype="{{filetype}}" headername="{{headernameshort}}" style="color:#F6931F"/>
+
+                        <script>
+                            $(function() {
+                                $( "#slider{{filetype}}{{headernameshort}}" ).slider({
+                                    range : true,
+                                    min   :  {{fieldData[0]}},
+                                    max   :  {{fieldData[1]}},
+                                    values: [{{fieldData[0]}}, {{fieldData[1]}}],
+                                    slide : function( event, ui ) {
+                                        $( "#{{filetype}}{{headernameshort}}" ).val( ui.values[0] + " - " + ui.values[1]);
+                                    }
+                                });
+                                $( "#{{filetype}}{{headernameshort}}" ).val( $( "#slider{{filetype}}{{headernameshort}}" ).slider( "values", 0 ) + " - " + $( "#slider{{filetype}}{{headernameshort}}" ).slider( "values", 1 ));
+                            });
+                        </script>
+                    {% endif %}
+
+                </div> <!-- end dial cell -->
+
+                    {% set counter = counter + 1 %}
+                    {% if loop.last %}
+            </div> <!-- end dials row - last -->
+                    {% endif %}
+                {% endfor %}
+        </div> <!-- end tab pane -->
+    {% endfor %}
+    <script>
+        $(function () {
+            $('#myTab a:first').tab('show');
+        });
+
+        $('#myTab a').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
+
+        function expon(val, min,max)
+        {
+                if (val == 0 ) {
+                    return 0;
+                }
+
+                var minv = 0;
+                if (min != 0) {
+                    minv = Math.log(min);
+                }
+
+                var maxv = Math.log(max);
+                max = max/2;
+
+                // calculate adjustment factor
+                var scale = (maxv-minv) / (max-min);
+
+                return Math.exp(minv + scale*(val-min));
+        }
+    </script>
+</div> <!-- end tab content-->
+
+<button class="btn btn-medium btn-primary pull-right" type="button" onclick="sendQuery()">Query</button>
+<button class="btn btn-medium btn-primary pull-right" type="button" onclick="window.location.reload()">Reset</button>

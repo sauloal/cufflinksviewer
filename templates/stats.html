@@ -1,0 +1,29 @@
+<div class="row-fluid"> <!-- start vals row 1 -->
+{% set counter = 0 %}
+{% for k in transcriptData.stats: %}
+    {% if (counter % 7) == 0 %}
+        {% if counter != 0 %}
+    </div> <!-- end vals row 1 -->
+
+    <div class="row-fluid"> <!-- start vals row 2-->
+        {% endif %}
+    {% endif %}
+
+
+
+        {% if k != "graphText" %}
+    <div class="span2"> <!-- start dial cell -->
+        <p>{{ k }}: {{ transcriptData.stats[k] }}</p>
+    </div>
+        {% endif %}
+
+    {% set counter = counter + 1 %}
+{% endfor %}
+
+</div> <!-- end vals row graph -->
+
+<div class="row-fluid"> <!-- start vals row graph-->
+    <div class="span12"> <!-- start val cell -->
+        {{ transcriptData.stats["graphText"]|safe }}
+    </div>
+</div>

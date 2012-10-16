@@ -1,0 +1,51 @@
+
+<textarea id="ta" name="ẗa" rows="15" cols="400" class="span12"></textarea>
+
+<div id="result">
+    none
+</div>
+
+<script>
+    function sendQuery(page) {
+        if (null == page) {
+            page = 1;
+        }
+
+        $("#ta").val(page);
+
+        var opts = {};
+
+        var val = $(".qryfield").filter(function(){
+            var name       = $(this).attr('id');
+            var dft        = $(this).attr('dft');
+            var filetype   = $(this).attr('filetype');
+            var headername = $(this).attr('headername');
+            var val        = $(this).val();
+
+            if (val != dft) {
+                $("#ta").val($("#ta").val() + "\n" + name + " : " + val + " != " + dft);
+                if ( opts[filetype] == undefined ) {
+                    opts[filetype] = new Object();
+                }
+                opts[filetype][headername] = val;
+            }
+            else {
+                $("#ta").val($("#ta").val() + "\n" + name + " : " + val + " == " + dft);
+            };
+        });
+
+        var dstLink    = "/query/" + page + "";
+        var payload    = JSON.stringify(opts);
+
+        $("#ta").val($("#ta").val() + "\nDST LINK: " + dstLink);
+        $("#ta").val($("#ta").val() + "\nPAYLOAD: "  + payload);
+
+        $('#result').html("empty");
+        $.post(dstLink, payload,
+               function(data) {
+                    $('#result').html(data);
+                    //$("#ta").val($("#ta").val() + "\n" + data);
+                });
+    }
+
+</script>

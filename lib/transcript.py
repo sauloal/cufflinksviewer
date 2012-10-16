@@ -750,7 +750,7 @@ def translateHeader(keysH):
                                 if  fieldType == 'rangemin':
                                     fieldType = 'rangeminlog'
                                 elif fieldType == 'rangeminmax' :
-                                    fieldType = 'rangemaxlog'
+                                    fieldType = 'rangeminmaxlog'
                         except ValueError:
                             print "value error: %s" % str(valN)
                             pass

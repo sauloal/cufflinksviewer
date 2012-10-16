@@ -45,6 +45,7 @@ MAX_QUERY_BUFFER = 100
 app        = Flask(__name__)
 app.config.from_object(__name__)
 app.jinja_env.globals['url_for_other_page'] = pagearizer.url_for_other_page
+app.jinja_env.globals['trim_blocks'       ] = True
 
 #APPLICATION CODE :: SETUP
 @app.before_request

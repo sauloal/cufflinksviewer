@@ -1,7 +1,7 @@
-{% include 'paginator.html' %}
+{% include 'paginator.html' -%}
 
-{% for page in resKeys %}
-    {% set transcriptData = resPage[page] %}
+{% for page in resKeys -%}
+    {% set transcriptData = resPage[page] -%}
     <div class="row-fluid">
         <div class="span12">
             <h4>{{ beginPos + loop.index }}: {{ page }} <small>(category: {{ transcriptData.stats['category'] }})</small></h4>
@@ -15,11 +15,11 @@
                     <h4>Stats</h4>
                 </div>
             </div>
-            {% include "stats.html" %}
+            {% include "stats.html" -%}
         </div>
     </div>
 
-    {% for transcriptName in transcriptData.getTranscripts() %}
+    {% for transcriptName in transcriptData.getTranscripts() -%}
         <div class="row-fluid">
             <div class="span11 offset1 transcripts">
                 <div class="row-fluid">
@@ -27,15 +27,15 @@
                         <h4>Transcript: {{ transcriptName }} <small>Sample: {{ transcriptData.getSampleName(transcriptName) }}</small></h4>
                     </div>
                 </div>
-                {% include "transcripts.html" %}
+                {% include "transcripts.html" -%}
             </div>
         </div>
-    {% endfor %}
+    {% endfor -%}
 
 
-{% endfor %}
+{% endfor -%}
 
-{% include 'paginator.html' %}
+{% include 'paginator.html' -%}
 
 <style>
     .stats {

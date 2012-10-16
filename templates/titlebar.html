@@ -36,6 +36,11 @@
               <button type="submit" class="btn">Sign in</button>
             </form>
           </div><!--/.nav-collapse -->
+          {% if db == None %}
+          <i class="icon-remove icon-white pull-right"></i>
+          {% else %}
+          <i class="icon-ok icon-white pull-right"></i>
+          {% endif %}
         </div>
       </div>
     </div>

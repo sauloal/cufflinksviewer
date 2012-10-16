@@ -383,9 +383,8 @@ class transcriptdata(object):
         if name not in self.headers[filetype]:
             self.headers[filetype][name] = []
 
-        if value not in self.headers[filetype][name]:
-            self.headers[filetype][name].append( value )
-            self.headers[filetype][name].sort()
+        #if [ value, self.gene ] not in self.headers[filetype][name]:
+        self.headers[filetype][name].append( [ value, [ self.gene ] ] )
 
     def getGraph(self):
         graphData = {}
@@ -670,11 +669,43 @@ def sortNode(key):
     vals = key.split("_")
     return int(vals[1])
 
+def sort0(key):
+    return key[0]
+
 #'select'
 #'rangemin'
 #'rangeminmax'
 #'input'
 
+class index(object):
+    def __init__(self):
+        pass
+    def __repr__(self):
+        if hasattr(self, 'res'):
+            return str(self.res)
+        else:
+            return super
+
+
+def consolidate(val):
+    seen = {}
+    res  = []
+    for x in val:
+        if x[0] not in seen:
+            #print "x0",x[0],"not yet seen. adding",x[1]
+            seen[x[0]] = len(res)
+            res.append([ x[0], [x[1][0]] ])
+        else:
+            pos = seen[x[0]]
+            if x[1][0] not in res[ pos ][1]:
+                #print "x0",x[0],"already seen at",pos,". appending",x[1]
+                res[ pos ][1].append(x[1][0])
+            else:
+                #print "x0",x[0],"already seen at",pos,". skipping.",x[1],"already in"
+                pass
+    ind = index()
+    ind.res = res
+    return ind
 
 def translateHeader(keysH):
     keysN = {}
@@ -689,20 +720,26 @@ def translateHeader(keysH):
             keysN[filetype] = {}
 
         for colName in cols:
-            val = cols[colName]
+            val  = cols[colName]
+            data = list(set([ x[0] for x in val ]))
+            data.sort()
+            #print val
+            consolidated  = consolidate(val)
+            cols[colName] = consolidated
+            #print consolidated
 
             if colName in translate[filetype]:
                 colNameNew, parsers, fieldType = translate[filetype][colName]
 
                 if colNameNew is not None:
-                    valN = val
+                    valN = data
                     for parser in parsers:
                         valN = parser(valN)
 
                     if ((fieldType == 'select') and (len(valN) == 1)):
                         continue
 
-                    if fieldType == 'rangemin':
+                    if fieldType == 'rangemin' or fieldType == 'rangeminmax' :
                         v1 = valN[0]
                         if v1 == 0: v1 = 1
                         v2 = valN[1]
@@ -710,15 +747,17 @@ def translateHeader(keysH):
                             print "V1 %d (%d) V2 %d (%d)" % ( v1, math.log10(v1), v2, math.log10(v2) )
                             if (math.log10(v1) + 2) <= math.log10(v2):
                                 print "  converting to log"
-                                fieldType = 'rangeminlog'
+                                if  fieldType == 'rangemin':
+                                    fieldType = 'rangeminlog'
+                                elif fieldType == 'rangeminmax' :
+                                    fieldType = 'rangemaxlog'
                         except ValueError:
                             print "value error: %s" % str(valN)
                             pass
 
-
-                    keysN[filetype][colNameNew] = [valN, fieldType]
+                    keysN[filetype][colNameNew] = [valN, fieldType, consolidated]
             else:
-                keysN[filetype][colName] = [val, 'select']
+                keysN[filetype][colName] = [data, 'select', consolidated]
 
     return keysN
 

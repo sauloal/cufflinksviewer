@@ -40,7 +40,7 @@
         $("#ta").val($("#ta").val() + "\nDST LINK: " + dstLink);
         $("#ta").val($("#ta").val() + "\nPAYLOAD: "  + payload);
 
-        $('#result').html("empty");
+        $('#result').html("<b>Querying ...</b>");
         $.post(dstLink, payload,
                function(data) {
                     $('#result').html(data);

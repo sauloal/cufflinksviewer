@@ -45,7 +45,7 @@
                         {% if fieldType == 'selectmultiple'%}
                             {% set multiple = 'multiple="multiple"' %}
                         {% endif %}
-                        <select name="{{filetype}}{{headernameshort}}" id="{{filetype}}{{headernameshort}}" class="{{spansize}} qryfield" dft="" filetype="{{filetype}}" headername="{{headernameshort}}" {{multiple}} style="color:#F6931F">
+                        <select name="{{filetype}}{{headernameshort}}" id="{{filetype}}{{headernameshort}}" class="{{spansize}} qryfield" dft="" filetype="{{filetype}}" headername="{{headername}}" {{multiple}} style="color:#F6931F">
                             <option selected value=""></option>
                             {% for value in fieldData %}
                             <option value="{{ value }}">{{ value }}</option>
@@ -56,14 +56,14 @@
 
 
                     {% if fieldType == 'input' %}
-                        <input type="text" placeholder="Text input" name="{{filetype}}{{headernameshort}}" id="{{filetype}}{{headernameshort}}"  class="{{spansize}} qryfield" dft="" filetype="{{filetype}}" headername="{{headernameshort}}" style="color:#F6931F"/>
+                        <input type="text" placeholder="Text input" name="{{filetype}}{{headernameshort}}" id="{{filetype}}{{headernameshort}}"  class="{{spansize}} qryfield" dft="" filetype="{{filetype}}" headername="{{headername}}" style="color:#F6931F"/>
                     {% endif %}
 
 
 
                     {% if fieldType == 'rangeminlog' %}
                             <div id="slider{{filetype}}{{headernameshort}}" class="{{spansize}}"></div>
-                            <input type="text" name="{{filetype}}{{headernameshort}}" id="{{filetype}}{{headernameshort}}" class="{{spansize}} qryfield rangelabel" dft="{{ fieldData[0] }}" filetype="{{filetype}}" headername="{{headernameshort}}" style="color:#F6931F"/>
+                            <input type="text" name="{{filetype}}{{headernameshort}}" id="{{filetype}}{{headernameshort}}" class="{{spansize}} qryfield rangelabel" dft="{{ fieldData[0] }}" filetype="{{filetype}}" headername="{{headername}}" style="color:#F6931F"/>
 
                             <script>
                                 $(function() {
@@ -84,7 +84,7 @@
 
                     {% if fieldType == 'rangemin' %}
                         <div id="slider{{filetype}}{{headernameshort}}" class="{{spansize}}"></div>
-                        <input type="text" name="{{filetype}}{{headernameshort}}" id="{{filetype}}{{headernameshort}}" class="{{spansize}} qryfield rangelabel" dft="{{ fieldData[0] }}" filetype="{{filetype}}" headername="{{headernameshort}}" style="color:#F6931F"/>
+                        <input type="text" name="{{filetype}}{{headernameshort}}" id="{{filetype}}{{headernameshort}}" class="{{spansize}} qryfield rangelabel" dft="{{ fieldData[0] }}" filetype="{{filetype}}" headername="{{headername}}" style="color:#F6931F"/>
 
                         <script>
                                 $(function() {
@@ -108,7 +108,7 @@
 
                     {% if fieldType == 'rangeminmax' %}
                         <div id="slider{{filetype}}{{headernameshort}}" class="{{spansize}}"></div>
-                        <input type="text" name="{{filetype}}{{headernameshort}}" id="{{filetype}}{{headernameshort}}" class="{{spansize}} qryfield rangelabel" dft="{{ fieldData[0] }} - {{ fieldData[1] }}" filetype="{{filetype}}" headername="{{headernameshort}}" style="color:#F6931F"/>
+                        <input type="text" name="{{filetype}}{{headernameshort}}" id="{{filetype}}{{headernameshort}}" class="{{spansize}} qryfield rangelabel" dft="{{ fieldData[0] }} - {{ fieldData[1] }}" filetype="{{filetype}}" headername="{{headername}}" style="color:#F6931F"/>
 
                         <script>
                             $(function() {

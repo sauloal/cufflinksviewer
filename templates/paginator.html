@@ -84,18 +84,3 @@
         {% endif -%}
     </ul>
 </div>
-<div class="span12">
-    <p class="flash">
-    <strong>{{ maxPage }}</strong> Results:
-    {% with messages = get_flashed_messages() -%}
-        {% if messages -%}
-            {% for message in messages -%}
-                {{ message|safe }}
-            {% endfor -%}
-        {% endif -%}
-    {% endwith -%}
-    </p>
-</div>
-<div class="progress" style="width: 50%; margin-left: auto; margin-right: auto; min-height: 5pt; max-height: 5pt">
-    <div class="bar" style="width: {{ perc }}%;"></div>
-</div>

@@ -646,6 +646,7 @@ class index(object):
 def consolidate(val):
     seen = {}
     res  = []
+
     for x in val:
         if x[0] not in seen:
             #print "x0",x[0],"not yet seen. adding",x[1]
@@ -659,9 +660,13 @@ def consolidate(val):
             else:
                 #print "x0",x[0],"already seen at",pos,". skipping.",x[1],"already in"
                 pass
+
+    res.sort(key=sort0)
+
     ind = index()
     ind.res = res
     return ind
+
 
 def addHeader(headers, gene, fileType, key, value):
     if value is not None:
@@ -672,6 +677,7 @@ def addHeader(headers, gene, fileType, key, value):
             headers[fileType][key] = []
 
         headers[fileType][key].append( [ value, [ gene ] ] )
+
 
 def getIndex(datas):
 

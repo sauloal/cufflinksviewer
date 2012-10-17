@@ -204,11 +204,17 @@ def getResult(db, headers, qry):
                         minVal = int(minVal)
                         maxVal = int(maxVal)
                         lLists = []
+                        #print "MINMAX %d - %d" % (minVal, maxVal)
+
                         for i in range(len(indexRes)):
                             indexKey = indexRes[i][0]
                             indexVal = indexRes[i][1]
+                            #print "  VAL %d" % indexKey
+
                             if indexKey >= minVal:
+                                #print "    KEY %d <= VAL %d" % (indexKey, minVal)
                                 if indexKey <= maxVal:
+                                    #print "      KEY %d >= VAL %d" % (indexKey, maxVal)
                                     qryRes = indexVal
                                     lLists.extend(qryRes)
                                 else:
@@ -315,14 +321,14 @@ def formatQuery(qry):
         else:
             res = ""
 
-        res += "<strong>%s</strong> :" % filetype
+        res += "<span class=\"label label-success\"><strong>%s</strong> :</span>" % filetype
 
         for fieldname in qry[filetype]:
             qryValue = qry[filetype][fieldname]
-            res += " %s = '<em>%s</em>'" % (fieldname, qryValue)
+            res += " <span class=\"label label-warning\">%s = '<em>%s</em>'</span>" % (fieldname, qryValue)
 
     if res is None:
-        res = "<strong>All</strong>"
+        res = "<span class=\"label label-success\"><strong>All</strong></span>"
 
     return res
 

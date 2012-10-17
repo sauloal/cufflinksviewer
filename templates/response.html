@@ -1,4 +1,25 @@
+<div class="span12">
+    <p class="flash">
+    <span class="label label-important"><strong>{{ count }}</strong> Results:</span>
+    {% with messages = get_flashed_messages() -%}
+        {% if messages -%}
+            {% for message in messages -%}
+                {{ message|safe }}
+            {% endfor -%}
+        {% endif -%}
+    {% endwith -%}
+    </p>
+</div>
+
+<div class="progress span6 offset3" style="min-height: 5pt; max-height: 5pt">
+    <div class="bar" style="width: {{ perc }}%;"></div>
+</div>
+
+<hr>
+
 {% include 'paginator.html' -%}
+
+<i class="icon-picture" dst="statsgraph"></i>
 
 {% for page in resKeys -%}
     {% set transcriptData = resPage[page] -%}

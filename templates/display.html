@@ -1,9 +1,7 @@
 
 <textarea id="ta" name="ẗa" rows="15" cols="400" class="span12" style="display: none"></textarea>
 
-<div id="result">
-    <b>-</b>
-</div>
+<div id="result"></div>
 
 <script>
     function sendQuery(page) {
@@ -74,12 +72,11 @@
 
         $(document).on('click', "#result i[class=icon-picture]", function(){
             var tgt = $(this).attr("dst");
-            $("div[id="+tgt+"]").toggle("medium");
+            $("div[id$="+tgt+"]").each(function(data){
+                $(this).toggle("medium");
+            });
         });
     });
-
-
-
 </script>
 
 <style>

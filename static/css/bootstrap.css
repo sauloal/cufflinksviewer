@@ -217,7 +217,7 @@ a:hover {
 [class*="span"] {
   float: left;
   min-height: 1px;
-  margin-left: 20px;
+  margin-left: 10px;
 }
 
 .container,
@@ -343,7 +343,7 @@ a:hover {
   display: block;
   float: left;
   width: 100%;
-  min-height: 30px;
+  min-height: 20px;
   margin-left: 2.127659574468085%;
   *margin-left: 2.074468085106383%;
   -webkit-box-sizing: border-box;
@@ -563,8 +563,8 @@ a:hover {
 }
 
 .container-fluid {
-  padding-right: 20px;
-  padding-left: 20px;
+  padding-right: 10px;
+  padding-left: 10px;
   *zoom: 1;
 }
 
@@ -580,7 +580,7 @@ a:hover {
 }
 
 p {
-  margin: 0 0 10px;
+  margin: 0 0 5px;
 }
 
 .lead {
@@ -632,7 +632,7 @@ h3,
 h4,
 h5,
 h6 {
-  margin: 10px 0;
+  margin: 5px 0;
   font-family: inherit;
   font-weight: bold;
   line-height: 1;
@@ -653,32 +653,32 @@ h6 small {
 
 h1 {
   font-size: 36px;
-  line-height: 40px;
+  line-height: 30px;
 }
 
 h2 {
   font-size: 30px;
-  line-height: 40px;
+  line-height: 30px;
 }
 
 h3 {
   font-size: 24px;
-  line-height: 40px;
+  line-height: 30px;
 }
 
 h4 {
   font-size: 18px;
-  line-height: 20px;
+  line-height: 30px;
 }
 
 h5 {
   font-size: 14px;
-  line-height: 20px;
+  line-height: 15px;
 }
 
 h6 {
   font-size: 12px;
-  line-height: 20px;
+  line-height: 15px;
 }
 
 h1 small {
@@ -966,11 +966,11 @@ input[type="tel"],
 input[type="color"],
 .uneditable-input {
   display: inline-block;
-  height: 20px;
-  padding: 4px 6px;
-  margin-bottom: 9px;
+  height: 15px;
+  padding: 3px 5px;
+  margin-bottom: 7px;
   font-size: 14px;
-  line-height: 20px;
+  line-height: 15px;
   color: #555555;
   -webkit-border-radius: 3px;
      -moz-border-radius: 3px;

@@ -99,12 +99,12 @@ def query(page):
         qry = jsonpickle.decode(qrystr)
         print "qry structure", qry
 
-    #TODO: IMPLEMENT FLASH
-    #flash('new entry was successfully posted')
-
     res = queryBuffer(sessionId, qry)
 
     count = len(res)
+
+    flash(formatQuery(qry))
+
     if count > 0:
         maxPage  = count/PER_PAGE
 
@@ -113,7 +113,6 @@ def query(page):
 
         if page > maxPage:
             page = maxPage
-
 
         perc     = int((float(page) / maxPage) * 100)
         beginPos = (page  - 1) * PER_PAGE
@@ -305,6 +304,28 @@ def getResultForPage(res, page, num_per_page, count):
         outvals[k] = res[k]
 
     return outvals
+
+
+def formatQuery(qry):
+    res = None
+
+    for filetype in qry:
+        if res is not None:
+            res += " <strong>AND</strong> "
+        else:
+            res = ""
+
+        res += "<strong>%s</strong> :" % filetype
+
+        for fieldname in qry[filetype]:
+            qryValue = qry[filetype][fieldname]
+            res += " %s = '<em>%s</em>'" % (fieldname, qryValue)
+
+    if res is None:
+        res = "<strong>All</strong>"
+
+    return res
+
 
 
 

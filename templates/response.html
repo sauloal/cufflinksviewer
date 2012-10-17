@@ -5,9 +5,14 @@
     {% set pageshort = page.replace("-", "").replace("_", "").replace(".", "") %}
     <div class="row-fluid">
         <div class="span12">
-            <h4>{{ beginPos + loop.index }}: {{ page }} <i class="icon-chevron-down" dst="row{{ pageshort }}"></i><small>(category: {{ transcriptData.stats['category'] }})</small></h4>
+            <h4>{{ beginPos + loop.index }}: {{ page }} <i class="icon-chevron-down" dst="row{{ pageshort }}"></i> <i class="icon-picture" dst="row{{ pageshort }}statsgraph"></i> <small>(category: {{ transcriptData.stats['category'] }})</small></h4>
         </div>
     </div> <!-- end header row -->
+    <div class="row-fluid graph graphbig" id="row{{ pageshort }}statsgraph"> <!-- start vals row graph-->
+        <div class="span12"> <!-- start val cell -->
+            {{ transcriptData.stats["graphText"]|safe }}
+        </div>
+    </div>
 
     <div class="row-fluid rowresults" id="row{{ pageshort }}">
         <div class="row-fluid">

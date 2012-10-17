@@ -14,12 +14,12 @@ indexGtf1        = 0 #chr
 indexGtf2        = 9 #transc
 
 
-setupfile        = sys.argv[0] + '.json'
+setupfile        = 'setup.json'
 if not os.path.exists(setupfile):
 	print "count not find setup file %s" % setupfile
 	sys.exit(1)
 
-for k,v in jsonpickle.decode(open(setupfile, 'r').read()).items():
+for k,v in jsonpickle.decode(open(setupfile, 'r').read())['joiner'].items():
 	globals()[k] = v
 
 #print globals()
@@ -45,7 +45,7 @@ def main():
     dataset  = {}
     outfiles = {}
     datas    = transcript.transcriptdict()
-    namesA   = [ x[0] for x in transcript.sampleFolders ]
+    namesA   = [ x[0] for x in sampleFolders ]
     namesA.sort()
 
     #for ext in ( 'tab', 'csv'):
@@ -70,7 +70,7 @@ def main():
     #        outfiles[ext][group]['filehandle'] = open(fn, 'w')
 
 
-    for sampleFolder in transcript.sampleFolders:
+    for sampleFolder in sampleFolders:
         sampleName, sampleDirectory = sampleFolder
         dataset[sampleName] = {
             'expression' : os.path.join(base, sampleDirectory, expressionName),

@@ -7,12 +7,6 @@ import math
 graphWidth       = 600
 graphHeight      = int(graphWidth / 2.16)
 
-sampleFolders    =  [
-                        ['CONTROL', 'S01'],
-                        ['PRIMED' , 'S02']
-                    ]
-
-
 
 class transcriptdict(dict):
     def __init__(self, *args, **kwargs):

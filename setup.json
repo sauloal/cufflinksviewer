@@ -1,0 +1,19 @@
+{
+    "joiner": {
+        "base"             : "..\/Analysis\/Analysis\/Expression",
+        "expressionName"   : "transcripts_annotated.expr.csv",
+        "gtfName"          : "transcripts.gtf",
+        "inputAnnoTabFile" : "rnaSeq\/input\/ANNO.tab",
+        "dbfile"           : "db.json",
+        "indexfile"        : "index.json",
+        "sampleFolders"    :    [
+                                ["CONTROL", "S01"],
+                                ["PRIMED",  "S02"]
+                                ]
+    },
+    "server":{
+        "DEBUG"            : true,
+        "PER_PAGE"         : 20,
+        "MAX_QUERY_BUFFER" : 100
+    }
+}

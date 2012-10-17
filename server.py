@@ -15,9 +15,18 @@ from flask import Flask, request, session, g, redirect, url_for, abort, render_t
 from contextlib import closing
 
 
+
+if not os.path.exists(joiner.setupfile):
+	print "count not find setup file %s" % joiner.setupfile
+	sys.exit(1)
+
+for k,v in jsonpickle.decode(open(joiner.setupfile, 'r').read())['server'].items():
+	globals()[k] = v
+
 #configuration
-DEBUG      = True
-PER_PAGE   = 20
+#DEBUG      = True
+#PER_PAGE   = 20
+#MAX_QUERY_BUFFER = 100
 SECRET_KEY = 'development key'
 
 
@@ -26,7 +35,7 @@ db         = None
 headers    = None
 queries    = {}
 
-MAX_QUERY_BUFFER = 100
+
 
 #class MyFlask(Flask):
 #    def get_send_file_max_age(self, name):

@@ -14,6 +14,7 @@
     "server":{
         "DEBUG"            : true,
         "PER_PAGE"         : 20,
-        "MAX_QUERY_BUFFER" : 100
+        "MAX_QUERY_BUFFER" : 100,
+	"PORT"             : 5000
     }
 }

@@ -31,15 +31,6 @@ for k,v in jsonpickle.decode(open(setupfile, 'r').read())['joiner'].items():
 #dbfile           = 'db.json'
 #indexfile        = 'index.json'
 
-#if os.path.exists(inputAnnoTabFile):
-    #my $annoFile  = readTab->new(inTabFile => $inputAnnoTabFile,   firstLine => 1);
-    #my %annoSetup = (
-    #    inTable       => $annoFile,
-    #    primaryColumn => 'queryId'
-    #);
-    #my $anno = anno->new(%annoSetup);
-    #die if ! defined $anno;
-    #pass
 
 def main():
     dataset  = {}
@@ -47,28 +38,6 @@ def main():
     datas    = transcript.transcriptdict()
     namesA   = [ x[0] for x in sampleFolders ]
     namesA.sort()
-
-    #for ext in ( 'tab', 'csv'):
-    #    outfiles[ext] = {
-    #                        "all"  : {},
-    #                        "1"    : {},
-    #                        "1only": {},
-    #                        "2"    : {},
-    #                        "2only": {},
-    #                        "1and2": {},
-    #                    }
-    #
-    #    outfiles[ext]["all"  ]['filename'] = "transcripts_annotated_expr.%s"        % ext
-    #    outfiles[ext]["1"    ]['filename'] = "transcripts_annotated_expr%s.%s"      % (namesA[0],            ext)
-    #    outfiles[ext]["1only"]['filename'] = "transcripts_annotated_expr%sonly.%s"  % (namesA[0],            ext)
-    #    outfiles[ext]["2"    ]['filename'] = "transcripts_annotated_expr%s.%s"      % (namesA[1],            ext)
-    #    outfiles[ext]["2only"]['filename'] = "transcripts_annotated_expr%sonly.%s"  % (namesA[1],            ext)
-    #    outfiles[ext]["1and2"]['filename'] = "transcripts_annotated_expr%sand%s.%s" % (namesA[0], namesA[1], ext)
-    #
-    #    for group in outfiles[ext]:
-    #        fn = outfiles[ext][group]['filename']
-    #        outfiles[ext][group]['filehandle'] = open(fn, 'w')
-
 
     for sampleFolder in sampleFolders:
         sampleName, sampleDirectory = sampleFolder
@@ -84,11 +53,10 @@ def main():
         loadExpFile(expfile, sampleName, datas)
         loadGtfFile(gtffile, sampleName, datas)
 
-    #pprint.pprint(datas)
     jsonpickle.set_preferred_backend('simplejson')
     jsonpickle.set_encoder_options('simplejson', sort_keys=True, indent=1)
     jsonp = jsonpickle.encode([datas, transcript.transcriptdata.headersPos, transcript.transcriptdata.keys])
-    #print jsonp
+
     with open(dbfile, 'w') as f:
         f.write(jsonp)
 
@@ -109,7 +77,6 @@ def loadExpFile(filename, sampleName, keyHash):
     with open(filename, 'r') as fd:
         for line in fd:
             line = line.strip()
-            #$l =~ s/\r//g;
 
             F        = line.split("\t")
             gene     = F[indexTab1]
@@ -164,7 +131,6 @@ def loadGtfFile(filename, sampleName, keyHash):
             gene   = F[indexGtf1]
 
             if regNum == 1:
-                #print line
                 for pos, name in enumerate(['chr'    , 'program'      , 'type',
                                             'start'  , 'end'          , 'thousand',
                                             'frame'  , 'dot'          , 'details',

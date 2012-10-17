@@ -9,7 +9,6 @@ import simplejson
 import jsonpickle
 import transcript
 import joiner
-import pagearizer
 
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, make_response
 from contextlib import closing
@@ -17,42 +16,27 @@ from contextlib import closing
 
 
 if not os.path.exists(joiner.setupfile):
-	print "count not find setup file %s" % joiner.setupfile
-	sys.exit(1)
+    print "count not find setup file %s" % joiner.setupfile
+    sys.exit(1)
 
 for k,v in jsonpickle.decode(open(joiner.setupfile, 'r').read())['server'].items():
-	globals()[k] = v
+    globals()[k] = v
 
-#configuration
-#DEBUG      = True
-#PER_PAGE   = 20
+#CONSTANTS
+#DEBUG            = True
+#PER_PAGE         = 20
 #MAX_QUERY_BUFFER = 100
 SECRET_KEY = 'development key'
 
 
-#application code
+#VARIABLES
 db         = None
 headers    = None
 queries    = {}
 
 
-
-#class MyFlask(Flask):
-#    def get_send_file_max_age(self, name):
-#        if name.lower().endswith('.js'):
-#            return 604800
-#        if name.lower().endswith('.css'):
-#            return 604800
-#        #if name.lower().endswith('.png'):
-#        #    return 604800
-#        return super(Flask).get_send_file_max_age(self, name)
-#
-#app = MyFlask(__name__)
-
-
 app        = Flask(__name__)
 app.config.from_object(__name__)
-app.jinja_env.globals['url_for_other_page'] = pagearizer.url_for_other_page
 app.jinja_env.globals['trim_blocks'       ] = True
 
 #APPLICATION CODE :: SETUP
@@ -72,13 +56,11 @@ def before_request():
 
 @app.after_request
 def after_request(response):
-    #g.db.close()
     return response
 
 
 @app.teardown_request
 def teardown_request(exception):
-    #g.db.close()
     pass
 
 
@@ -112,16 +94,13 @@ def query(page):
     qry = {}
     if request.method == 'POST':
         print "POST method %s" % (request.form)
-        #for field, value in request.form.items():
-        #    val = request.form[field]
-        #    qry[field] = val
-        #    print "field %s value %s" % (field, val)
         qrystr = request.form.keys()[0]
         print "query string %s" % qrystr
         qry = jsonpickle.decode(qrystr)
         print "qry structure", qry
 
-        #flash('new entry was successfully posted')
+    #TODO: IMPLEMENT FLASH
+    #flash('new entry was successfully posted')
 
     res = queryBuffer(sessionId, qry)
 
@@ -148,7 +127,6 @@ def query(page):
         resTemp = render_template('response.html', page=page, count=count, maxPage=maxPage, perc=perc, beginPos=beginPos, resPage=resPage, resKeys=resKeys);
         return resTemp
     else:
-        #resTemp = render_template('response.html', page=0,    count=count)
         resTemp = make_response("No match for query")
         return resTemp
 
@@ -330,7 +308,7 @@ def getResultForPage(res, page, num_per_page, count):
 
 
 
-#db
+#DATABASE
 def init_db(dbfile, indexfile):
     with app.app_context():
         print "initializing db"
@@ -358,8 +336,6 @@ def init_db(dbfile, indexfile):
         transcript.transcriptdata.headersPos, transcript.transcriptdata.keys = lHeadersPos, lKeys
 
 
-        #pprint.pprint(db)
-        #sys.exit(0)
         if db is None:
             print "no data in database"
             sys.exit(1)
@@ -385,42 +361,6 @@ def getDb():
     return [db, headers, queries]
 
 if __name__ == '__main__':
-    #db, headers, queries = getDb()
-    #pprint.pprint(headers)
-    #sys.exit(0)
     if not os.path.exists(joiner.dbfile) or not os.path.exists(joiner.indexfile):
         joiner.main()
-    app.run()
-
-
-
-
-#@app.route('/add', methods=['POST'])
-#def add_entry():
-#    if not session.get('logged_in'):
-#        abort(401)
-#    g.db.execute('insert into entries (title, text) values(?,?)', \
-#                 [request.form['title'], request.form['text']])
-#    g.db.commit()
-#    flash('new entry was successfully posted')
-#    return redirect(url_for('show_entries'))
-#
-#@app.route('/login', methods=['GET', 'POST'])
-#def login():
-#    error = None
-#    if request.method == 'POST':
-#        if   request.form['username'] != app.config['USERNAME']:
-#            error = "Invalid username"
-#        elif request.form['password'] != app.config['PASSWORD']:
-#            error = "Invalid password"
-#        else:
-#            session['logged_in'] = True
-#            flash('you were logged in')
-#            return redirect(url_for('show_entries'))
-#    return render_template('login.html', error=error)
-#
-#@app.route('/logout')
-#def logout():
-#    session.pop('logged_in', None)
-#    flash('you were logged out')
-#    return redirect(url_for('show_entries'))
+    app.run(port=PORT)

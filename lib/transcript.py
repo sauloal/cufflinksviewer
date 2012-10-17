@@ -348,23 +348,12 @@ class transcriptdata(object):
             sampleName  = self.getSampleName(transcript)
             fileType    = 'expression'
 
-            #for regNum in self.getRegNums(transcript, fileType):
-                #exon_number = self.getValue(transcript, fileType, regNum, 'exon_number')
-                #start       = self.getValue(transcript, fileType, regNum, 'start'      )
-                #end         = self.getValue(transcript, fileType, regNum, 'end'        )
-                #length      = self.getValue(transcript, fileType, regNum, 'length'     )
-                #fpkm        = self.getValue(transcript, fileType, regNum, 'FPKM'       )
             sample      = self.getSampleName(transcript)
 
-                #graphData[transcript]['start' ] = start
-                #graphData[transcript]['end'   ] = end
-                #graphData[transcript]['length'] = length
-                #graphData[transcript]['FPKM'  ] = fpkm
             if transcript not in graphData:
                     graphData[transcript] = { }
             graphData[transcript]['sample'] = sample
             #pprint.pprint(graphData[transcript])
-
 
             if len(graphData) > 0:
                 if 'DATA' not in graphData[transcript]:
@@ -434,10 +423,6 @@ def getGraphTag(geneId, category, graphData):
                                             #    }
                                             #}
     #                            }
-    #<transcripts>
-    #        <transcript id=\"CUFF.11" Accession1=\"emb|AM486146.1|" Accession2=\"gb|AC172743.3|" Contig=\"NODE_1011_length_409_cov_123.496330" Contig_length=\"475" Description1=\"Vitis vinifera contig VV78X200411.3, whole genome shotgun sequence." Description2=\"Medicago truncatula chromosome 2 BAC clone mth2-26c15, complete sequence." FMI=\"1" FPKM_2=\"318.835" FPKM_conf_hi=\"351.721" FPKM_conf_lo=\"285.95" bundle_id=\"4709" coverage=\"85.5345" eval1=\"1e-82" eval2=\"2e-81" left=\"0" length=\"333" right=\"475" trans_id=\"CUFF.11\">
-    #                <exon id=\"0" FPKM=\"318.8351742599" conf_hi=\"351.720512" conf_lo=\"285.949837" cov=\"85.534535" dot=\"." end=\"66"  exon_number=\"1" frame=\"+" gene_id=\"CUFF.11" program=\"Cufflinks" start=\"1"   thousand=\"1000" transcript_id=\"CUFF.11.1" type=\"exon"/>
-    #                <exon id=\"1" FPKM=\"318.8351742599" conf_hi=\"351.720512" conf_lo=\"285.949837" cov=\"85.534535" dot=\"." end=\"475" exon_number=\"2" frame=\"+" gene_id=\"CUFF.11" program=\"Cufflinks" start=\"209" thousand=\"1000" transcript_id=\"CUFF.11.1" type=\"exon"/>
 
     #chxr=0,0,110 length
     #&chxt=y&chs=300x139 #size
@@ -738,10 +723,8 @@ def getIndex(datas):
             val  = cols[colName]
             data = list(set([ x[0] for x in val ]))
             data.sort()
-            #print val
             consolidated  = consolidate(val)
             cols[colName] = consolidated
-            #print consolidated
 
             if colName in translate[filetype]:
                 colNameNew, parsers, fieldType = translate[filetype][colName]

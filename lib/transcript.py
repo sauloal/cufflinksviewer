@@ -1,4 +1,4 @@
-import re
+import re,sys
 import string
 import decimal
 import pprint
@@ -38,40 +38,37 @@ class transcriptdict(dict):
     def __contains__(self, key):
         return dict.__contains__(self, trimValue(key))
 
+
 class transcriptdata(object):
-    headers    = {}
     headersPos = {}
     keys       = {}
 
     def __init__(self, gene):
-        self.gene        =  trimValue(gene)
-        self.transcripts =  {}
+        self.gene        = trimValue(gene)
+        self.transcripts = {}
         self.fileTypes   = ['expression', 'exons', 'statistics']
         self.sampleNames = {}
         self.stats       = {}
 
         for fileType in self.fileTypes:
-            if fileType not in self.headers:
-                self.headers[   fileType] = {}
+            if fileType not in self.headersPos:
                 self.headersPos[fileType] = {}
             if fileType not in self.keys:
                 self.keys[   fileType] = []
 
     def addKey(self, fileType, pos, key):
-        if fileType in self.headers:
-            if key not in self.headers[fileType]:
+        if fileType in self.headersPos:
+            if key not in self.headersPos[fileType]:
                 while len (self.keys[   fileType]) <= pos:
                     self.keys[   fileType].append(None)
 
                 if self.keys[   fileType][pos] is None:
                     print "        ADDING KEY %s: %d %s" % (fileType, pos, key)
                     self.keys[      fileType][pos] = key
-                    self.headers[   fileType][key] = []
                     self.headersPos[fileType][key] = pos
                 else:
                     print "POSITION %d ALREADY TAKEN WHEN TRYING TO ADD %s to %d" % (pos, key, pos)
                     print self.keys[      fileType]
-                    print self.headers[   fileType]
                     print self.headersPos[fileType]
                     raise KeyError
             else:
@@ -158,7 +155,6 @@ class transcriptdata(object):
         #print "appending gene %s: transcript %s sample %s file %s [#%03d] %s = %s" % (self.gene, transcript, sampleName, fileType, regNum, self.getHeader(fileType, pos), val)
         try:
             self.transcripts[transcript][fileType][regNum][pos] = val
-            self.addHeader(fileType, key, val)
 
         except KeyError, e:
             print "KEY ERROR: %s - TRANSCRIPT %s ORIGIN %s SOURCE %s POS %d VAL %s" % (e, transcript, fileType, sampleName, pos, val)
@@ -208,9 +204,9 @@ class transcriptdata(object):
 
     def getHeaders(self, fileType):
         if fileType in self.headersPos:
-            headers = self.headersPos[fileType].keys()
-            headers.sort()
-            return headers
+            headersKeys = self.headersPos[fileType].keys()
+            headersKeys.sort()
+            return headersKeys
         else:
             raise KeyError
 
@@ -350,41 +346,7 @@ class transcriptdata(object):
         if ((maxRight    is not None) and (('maxEnd'      not in self.stats) or (maxRight    > self.stats['maxEnd'        ]))): self.stats['maxEnd'        ] = maxRight
         #if ((maxLeft     is not None) and (('maxLeft'     not in self.stats) or (maxLeft     > self.stats['maxLeft'       ]))): self.stats['maxLeft'       ] = maxLeft
         #if ((minRight    is not None) and (('minRight'    not in self.stats) or (minRight    < self.stats['minRight'      ]))): self.stats['minRight'      ] = minRight
-
-        self.addHeader('statistics', 'category', self.stats['category'])
-
-        #for k in [  'numTranscripts', 'minFPKM'    , 'maxFPKM'    ,
-        #            'minLeft'       , 'maxLeft'    , 'minRight'   ,
-        #            'maxRight'      , 'minFPKMprop', 'maxFPKMprop']:
-        #   if k in self.stats: self.addHeader('statistics', k, self.stats[k])
-
-        #self.addHeader('statistics', "Start"      , self.stats["minLeft"    ])
-        #self.addHeader('statistics', "End"        , self.stats["maxRight"   ])
-        #self.addHeader('statistics', "minFPKM"    , self.stats["minFPKM"    ])
-        #self.addHeader('statistics', "maxFPKM"    , self.stats["maxFPKM"    ])
-        #self.addHeader('statistics', "minFPKMprop", self.stats["minFPKMprop"])
-        #self.addHeader('statistics', "maxFPKMprop", self.stats["maxFPKMprop"])
-
-        try:
-            if "minFPKM"     in self.stats: self.addHeader('statistics', "FPKM"        , self.stats["minFPKM"    ])
-            if "maxFPKM"     in self.stats: self.addHeader('statistics', "FPKM"        , self.stats["maxFPKM"    ])
-            if "minFPKMprop" in self.stats: self.addHeader('statistics', "FPKMprop"    , self.stats["minFPKMprop"])
-            if "maxFPKMprop" in self.stats: self.addHeader('statistics', "FPKMprop"    , self.stats["maxFPKMprop"])
-            if "minBegin"    in self.stats: self.addHeader('statistics', "StartEnd"    , self.stats["minBegin"   ])
-            if "maxEnd"      in self.stats: self.addHeader('statistics', "StartEnd"    , self.stats["maxEnd"     ])
-        except KeyError:
-            pprint.pprint(self.stats)
-            raise
-
-    def addHeader(self, filetype, name, value):
-        if filetype not in self.headers:
-            self.headers[filetype] = {}
-
-        if name not in self.headers[filetype]:
-            self.headers[filetype][name] = []
-
-        #if [ value, self.gene ] not in self.headers[filetype][name]:
-        self.headers[filetype][name].append( [ value, [ self.gene ] ] )
+        pass
 
     def getGraph(self):
         graphData = {}
@@ -640,9 +602,9 @@ def trimValue(value):
     return re.sub(r'(CUFF\.\d+)\.\d+', r'\1', value)
 
 
-
 def corrAll(value):
     return value
+
 
 def corrMinmax(value):
     minVal = min(value)
@@ -651,17 +613,27 @@ def corrMinmax(value):
     try:
         minVal = int(float(minVal))
     except ValueError:
+        print "MIN VAL", minVal
         pass
+    except TypeError:
+        print "MIN VAL", minVal
+        sys.exit(1)
 
     try:
         maxVal = int(float(maxVal)) + 1
     except ValueError:
+        print "MAX VAL", maxVal
         pass
+    except TypeError:
+        print "MAX VAL", maxVal
+        sys.exit(1)
 
     return [minVal, maxVal]
 
+
 def corrNone(value):
     return []
+
 
 def sortNode(key):
     #NODE_1_length_981_cov_40.408768
@@ -669,8 +641,13 @@ def sortNode(key):
     vals = key.split("_")
     return int(vals[1])
 
+
 def sort0(key):
     return key[0]
+
+
+
+
 
 #'select'
 #'rangemin'
@@ -707,10 +684,54 @@ def consolidate(val):
     ind.res = res
     return ind
 
-def translateHeader(keysH):
+def addHeader(headers, gene, fileType, key, value):
+    if value is not None:
+        if fileType not in headers:
+            headers[fileType] = {}
+
+        if key not in headers[fileType]:
+            headers[fileType][key] = []
+
+        headers[fileType][key].append( [ value, [ gene ] ] )
+
+def getIndex(datas):
+
+    headers = {}
+
+    for gene in datas:
+        data     = datas[gene]
+        category = data.stats['category']
+        addHeader(headers, gene, 'statistics', 'category', data.stats['category'])
+
+        try:
+            if "minFPKM"     in data.stats: addHeader(headers, gene, 'statistics', "FPKM"        , data.stats["minFPKM"    ])
+            if "maxFPKM"     in data.stats: addHeader(headers, gene, 'statistics', "FPKM"        , data.stats["maxFPKM"    ])
+            if "minFPKMprop" in data.stats: addHeader(headers, gene, 'statistics', "FPKMprop"    , data.stats["minFPKMprop"])
+            if "maxFPKMprop" in data.stats: addHeader(headers, gene, 'statistics', "FPKMprop"    , data.stats["maxFPKMprop"])
+            if "minBegin"    in data.stats: addHeader(headers, gene, 'statistics', "StartEnd"    , data.stats["minBegin"   ])
+            if "maxEnd"      in data.stats: addHeader(headers, gene, 'statistics', "StartEnd"    , data.stats["maxEnd"     ])
+        except KeyError:
+            pprint.pprint(data.stats)
+            raise
+
+        for key in data.stats:
+            statsKey = data.stats[key]
+
+        for transcript in data.getTranscripts():
+            sample = data.getSampleName(transcript)
+
+            for fileType in data.getFileTypes(transcript):
+
+                for regNum in data.getRegNums(transcript, fileType):
+
+                    for key in data.getHeaders(fileType):
+                        value = data.getValue(transcript, fileType, regNum, key)
+                        addHeader(headers, gene, fileType, key, value)
+
+
     keysN = {}
-    for filetype in keysH:
-        cols  = keysH[filetype]
+    for filetype in headers:
+        cols  = headers[filetype]
 
         if filetype not in translate:
             keysN[filetype] = cols

@@ -19,7 +19,6 @@ from contextlib import closing
 DEBUG      = True
 PER_PAGE   = 20
 SECRET_KEY = 'development key'
-DATABASE   = 'db.json'
 
 
 #application code
@@ -259,32 +258,34 @@ def getResult(db, headers, qry):
                     print headers[filetype].keys()
 
         resIds = None
-        llist  = [x[3] for x in lists]
-        resIds = set.intersection(*llist)
-        #for llist in lists:
-        #    lFileType  = llist[0]
-        #    lFieldName = llist[1]
-        #    lQryValue  = llist[2]
-        #    lResIds    = llist[3]
-        #
-        #    if len(lResIds) == 0:
-        #        print "    file type %s field %s qry %s yield no result" % (lFileType, lFieldName, lQryValue)
-        #        resIds = set()
-        #        break
-        #
-        #    if resIds is None:
-        #        print "    file type %s field %s qry %s len %d is first result" % (lFileType, lFieldName, lQryValue, len(lResIds))
-        #        resIds = set(lResIds)
-        #    else:
-        #        print "    file type %s field %s qry %s len %d . intersecting (%d)" % (lFileType, lFieldName, lQryValue, len(lResIds), len(resIds))
-        #        resIds = set(resIds).intersection(set(lResIds))
-        #        print "    file type %s field %s qry %s len %d . intersected  (%d)" % (lFileType, lFieldName, lQryValue, len(lResIds), len(resIds))
-        #
-        #    if len(resIds) == 0:
-        #        print "    colapsed to length 0"
-        #        break
-        #
-        #print "    final list has %d entries" % (len(resIds))
+
+        #llist  = [x[3] for x in lists]
+        #resIds = set.intersection(*llist)
+
+        for llist in lists:
+            lFileType  = llist[0]
+            lFieldName = llist[1]
+            lQryValue  = llist[2]
+            lResIds    = llist[3]
+
+            if len(lResIds) == 0:
+                print "    file type %s field %s qry %s yield no result" % (lFileType, lFieldName, lQryValue)
+                resIds = set()
+                break
+
+            if resIds is None:
+                print "    file type %s field %s qry %s len %d is first result" % (lFileType, lFieldName, lQryValue, len(lResIds))
+                resIds = set(lResIds)
+            else:
+                print "    file type %s field %s qry %s len %d . intersecting (%d)" % (lFileType, lFieldName, lQryValue, len(lResIds), len(resIds))
+                resIds = set(resIds).intersection(set(lResIds))
+                print "    file type %s field %s qry %s len %d . intersected  (%d)" % (lFileType, lFieldName, lQryValue, len(lResIds), len(resIds))
+
+            if len(resIds) == 0:
+                print "    colapsed to length 0"
+                break
+
+        print "    final list has %d entries" % (len(resIds))
 
         for resId in resIds:
             dbN[resId] = db[resId]
@@ -321,11 +322,16 @@ def getResultForPage(res, page, num_per_page, count):
 
 
 #db
-def init_db(dbfile):
+def init_db(dbfile, indexfile):
     with app.app_context():
         print "initializing db"
+
         if not os.path.exists(dbfile):
             print "NO DATABASE FILE %s" % dbfile
+            sys.exit(1)
+
+        if not os.path.exists(indexfile):
+            print "NO INDEX FILE %s" % indexfile
             sys.exit(1)
 
         global db
@@ -334,12 +340,14 @@ def init_db(dbfile):
 
         jsonpickle.set_preferred_backend('simplejson')
         jsonpickle.set_encoder_options('simplejson', sort_keys=True, indent=1)
-        data = open(dbfile, 'r').read()
+        dataDb = open(dbfile,    'r').read()
+        dataIn = open(indexfile, 'r').read()
 
-        db, tranlatedHeaders, lHeaders, lHeadersPos, lKeys = jsonpickle.decode(data)
-        transcript.transcriptdata.headers, transcript.transcriptdata.headersPos, transcript.transcriptdata.keys = lHeaders, lHeadersPos, lKeys
 
-        headers = tranlatedHeaders
+        db, lHeadersPos, lKeys = jsonpickle.decode(dataDb)
+        headers                = jsonpickle.decode(dataIn)
+        transcript.transcriptdata.headersPos, transcript.transcriptdata.keys = lHeadersPos, lKeys
+
 
         #pprint.pprint(db)
         #sys.exit(0)
@@ -351,19 +359,27 @@ def init_db(dbfile):
             print "database is empty"
             sys.exit(1)
 
+        if headers is None:
+            print "no data in index"
+            sys.exit(1)
+
+        if len(headers) == 0:
+            print "index is empty"
+            sys.exit(1)
+
         print "db loaded. %d entries" % len(db)
 
 
 def getDb():
     if db is None:
-        init_db(DATABASE)
+        init_db(joiner.dbfile, joiner.indexfile)
     return [db, headers, queries]
 
 if __name__ == '__main__':
     #db, headers, queries = getDb()
     #pprint.pprint(headers)
     #sys.exit(0)
-    if not os.path.exists(DATABASE):
+    if not os.path.exists(joiner.dbfile) or not os.path.exists(joiner.indexfile):
         joiner.main()
     app.run()
 

@@ -1,8 +1,8 @@
 
-<textarea id="ta" name="ẗa" rows="15" cols="400" class="span12"></textarea>
+<textarea id="ta" name="ẗa" rows="15" cols="400" class="span12" style="display: none"></textarea>
 
 <div id="result">
-    none
+    <b>-</b>
 </div>
 
 <script>
@@ -48,4 +48,72 @@
                 });
     }
 
+
+    $(document).ready(function(){
+        $(document).on('click', "#result i[class=icon-chevron-up]", function(){
+            var tgt = $(this).attr("dst");
+            //alert("click up: " + tgt);
+            $("div[id=" + tgt + "]").each(function(data){
+                $(this).css('display', 'none');
+            });
+            //$("#" + tgt).html('clicked up');
+            $(this).attr("class", "icon-chevron-down");
+        });
+
+        $(document).on('click', "#result i[class=icon-chevron-down]", function(){
+            var tgt = $(this).attr("dst");
+            //alert("click down: " + tgt);
+            $("div[id=" + tgt + "]").each(function(data){
+                $(this).css('display', 'block');
+            });
+            //$("#" + tgt).html('clicked down');
+            $(this).attr("class", "icon-chevron-up");
+        });
+    });
+
 </script>
+
+<style>
+    .stats {
+        background-color: #EEEEEE;
+    }
+    .transcripts {
+        background-color: #CDCDCD;
+    }
+
+    .keyname {
+        font-weight: bold;
+        margin: 0;
+        padding: 0;
+    }
+    .h6big{
+        font-size: medium;
+        text-decoration: underline;
+    }
+
+    .fileTypeexons{
+        background-color: #FFFACD;
+    }
+    .regNumexons1{
+        background-color: #FFFACD;
+    }
+    .regNumexons2{
+        background-color: #EEE9BF;
+    }
+    .regNumexons3{
+        background-color: #CDC9A5;
+    }
+
+    .fileTypeexpression{
+        background-color: #BFEFFF;
+    }
+    .regNumexpression1{
+        background-color: #BFEFFF;
+    }
+    .regNumexpression2{
+        background-color: #B2DFEE;
+    }
+    .regNumexpression3{
+        background-color: #9AC0CD;
+    }
+</style>

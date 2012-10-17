@@ -18,7 +18,7 @@ expressionName   = "transcripts_annotated.expr.csv"
 gtfName          = "transcripts.gtf"
 inputAnnoTabFile = "rnaSeq/input/ANNO.tab"
 dbfile           = 'db.json'
-
+indexfile        = 'index.json'
 
 #if os.path.exists(inputAnnoTabFile):
     #my $annoFile  = readTab->new(inTabFile => $inputAnnoTabFile,   firstLine => 1);
@@ -76,10 +76,14 @@ def main():
     #pprint.pprint(datas)
     jsonpickle.set_preferred_backend('simplejson')
     jsonpickle.set_encoder_options('simplejson', sort_keys=True, indent=1)
-    jsonp = jsonpickle.encode([datas, transcript.translateHeader(transcript.transcriptdata.headers), transcript.transcriptdata.headers, transcript.transcriptdata.headersPos, transcript.transcriptdata.keys])
+    jsonp = jsonpickle.encode([datas, transcript.transcriptdata.headersPos, transcript.transcriptdata.keys])
     #print jsonp
     with open(dbfile, 'w') as f:
         f.write(jsonp)
+
+    jsonq = jsonpickle.encode(transcript.getIndex(datas))
+    with open(indexfile, 'w') as f:
+        f.write(jsonq)
 
 def loadExpFile(filename, sampleName, keyHash):
     #trans_id    bundle_id    chr    left    right    FPKM    FMI    frac    FPKM_conf_lo    FPKM_conf_hi    coverage    length    Contig    Contig_length    Accession1    Description1    eval1    Accession2    Description2    eval2

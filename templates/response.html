@@ -2,82 +2,50 @@
 
 {% for page in resKeys -%}
     {% set transcriptData = resPage[page] -%}
+    {% set pageshort = page.replace("-", "").replace("_", "").replace(".", "") %}
     <div class="row-fluid">
         <div class="span12">
-            <h4>{{ beginPos + loop.index }}: {{ page }} <small>(category: {{ transcriptData.stats['category'] }})</small></h4>
+            <h4>{{ beginPos + loop.index }}: {{ page }} <i class="icon-chevron-down" dst="row{{ pageshort }}"></i><small>(category: {{ transcriptData.stats['category'] }})</small></h4>
         </div>
     </div> <!-- end header row -->
 
-    <div class="row-fluid">
-        <div class="span11 offset1 stats">
-            <div class="row-fluid">
-                <div class="span12">
-                    <h4>Stats</h4>
-                </div>
-            </div>
-            {% include "stats.html" -%}
-        </div>
-    </div>
-
-    {% for transcriptName in transcriptData.getTranscripts() -%}
+    <div class="row-fluid rowresults" id="row{{ pageshort }}">
         <div class="row-fluid">
-            <div class="span11 offset1 transcripts">
+            <div class="span11 offset1 stats">
                 <div class="row-fluid">
                     <div class="span12">
-                        <h4>Transcript: {{ transcriptName }} <small>Sample: {{ transcriptData.getSampleName(transcriptName) }}</small></h4>
+                        <h4>Stats <i class="icon-chevron-down" dst="row{{ pageshort }}stats"></i></h4>
                     </div>
                 </div>
-                {% include "transcripts.html" -%}
+                {% include "stats.html" -%}
             </div>
         </div>
-    {% endfor -%}
 
+        {% for transcriptName in transcriptData.getTranscripts() -%}
+            {% set transcriptNameShort = transcriptName.replace("-", "").replace("_", "").replace(".", "") %}
+            <div class="row-fluid">
+                <div class="span11 offset1 transcripts">
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <h4>Transcript: {{ transcriptName }} <i class="icon-chevron-down" dst="row{{ pageshort }}{{ transcriptNameShort }}"></i> <small>Sample: {{ transcriptData.getSampleName(transcriptName) }}</small></h4>
+                        </div>
+                    </div>
+                    {% include "transcripts.html" -%}
+                </div>
+            </div>
+        {% endfor -%}
+    </div>
 
 {% endfor -%}
 
 {% include 'paginator.html' -%}
 
-<style>
-    .stats {
-        background-color: #EEEEEE;
-    }
-    .transcripts {
-        background-color: #CDCDCD;
-    }
 
-    .keyname {
-        font-weight: bold;
-        margin: 0;
-        padding: 0;
-    }
-    .h6big{
-        font-size: medium;
-        text-decoration: underline;
-    }
-
-    .fileTypeexons{
-        background-color: #FFFACD;
-    }
-    .regNumexons1{
-        background-color: #FFFACD;
-    }
-    .regNumexons2{
-        background-color: #EEE9BF;
-    }
-    .regNumexons3{
-        background-color: #CDC9A5;
-    }
-
-    .fileTypeexpression{
-        background-color: #BFEFFF;
-    }
-    .regNumexpression1{
-        background-color: #BFEFFF;
-    }
-    .regNumexpression2{
-        background-color: #B2DFEE;
-    }
-    .regNumexpression3{
-        background-color: #9AC0CD;
-    }
-</style>
+<script>
+    $(document).ready(function(){
+        $("div.rowresults").each(function(){ $(this).css('display', 'none')});
+        $("div.rowgroup"  ).each(function(){ $(this).css('display', 'none')});
+        $("div.rowtype"   ).each(function(){ $(this).css('display', 'none')});
+        $("div.rowdata"   ).each(function(){ $(this).css('display', 'none')});
+    });
+</script>

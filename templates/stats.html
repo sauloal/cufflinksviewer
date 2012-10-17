@@ -1,4 +1,4 @@
-<div class="row-fluid"> <!-- start vals row 1 -->
+<div class="row-fluid rowdata" id="row{{ pageshort }}stats"> <!-- start vals row 1 -->
 {% set counter = 0 %}
 {% for k in transcriptData.stats: %}
     {% if (counter % 7) == 0 %}
@@ -13,7 +13,8 @@
 
         {% if k != "graphText" %}
     <div class="span2"> <!-- start dial cell -->
-        <p>{{ k }}: {{ transcriptData.stats[k] }}</p>
+        <p class="keyname">{{ k }}</p>
+        {{ transcriptData.stats[k] }}
     </div>
         {% endif %}
 
@@ -22,7 +23,7 @@
 
 </div> <!-- end vals row graph -->
 
-<div class="row-fluid"> <!-- start vals row graph-->
+<div class="row-fluid rowdata" id="row{{ pageshort }}stats"> <!-- start vals row graph-->
     <div class="span12"> <!-- start val cell -->
         {{ transcriptData.stats["graphText"]|safe }}
     </div>

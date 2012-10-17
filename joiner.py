@@ -13,12 +13,23 @@ indexTab2        = 0 #transc
 indexGtf1        = 0 #chr
 indexGtf2        = 9 #transc
 
-base             = '../Analysis/Analysis/Expression'
-expressionName   = "transcripts_annotated.expr.csv"
-gtfName          = "transcripts.gtf"
-inputAnnoTabFile = "rnaSeq/input/ANNO.tab"
-dbfile           = 'db.json'
-indexfile        = 'index.json'
+
+setupfile        = sys.argv[0] + '.json'
+if not os.path.exists(setupfile):
+	print "count not find setup file %s" % setupfile
+	sys.exit(1)
+
+for k,v in jsonpickle.decode(open(setupfile, 'r').read()).items():
+	globals()[k] = v
+
+#print globals()
+#sys.exit(0)
+#base             = '../Analysis/Analysis/Expression'
+#expressionName   = "transcripts_annotated.expr.csv"
+#gtfName          = "transcripts.gtf"
+#inputAnnoTabFile = "rnaSeq/input/ANNO.tab"
+#dbfile           = 'db.json'
+#indexfile        = 'index.json'
 
 #if os.path.exists(inputAnnoTabFile):
     #my $annoFile  = readTab->new(inTabFile => $inputAnnoTabFile,   firstLine => 1);

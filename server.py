@@ -259,31 +259,31 @@ def getResult(db, headers, qry):
 
         resIds = None
 
-        #llist  = [x[3] for x in lists]
-        #resIds = set.intersection(*llist)
+        llist  = [x[3] for x in lists]
+        resIds = set.intersection(*llist)
 
-        for llist in lists:
-            lFileType  = llist[0]
-            lFieldName = llist[1]
-            lQryValue  = llist[2]
-            lResIds    = llist[3]
-
-            if len(lResIds) == 0:
-                print "    file type %s field %s qry %s yield no result" % (lFileType, lFieldName, lQryValue)
-                resIds = set()
-                break
-
-            if resIds is None:
-                print "    file type %s field %s qry %s len %d is first result" % (lFileType, lFieldName, lQryValue, len(lResIds))
-                resIds = set(lResIds)
-            else:
-                print "    file type %s field %s qry %s len %d . intersecting (%d)" % (lFileType, lFieldName, lQryValue, len(lResIds), len(resIds))
-                resIds = set(resIds).intersection(set(lResIds))
-                print "    file type %s field %s qry %s len %d . intersected  (%d)" % (lFileType, lFieldName, lQryValue, len(lResIds), len(resIds))
-
-            if len(resIds) == 0:
-                print "    colapsed to length 0"
-                break
+        #for llist in lists:
+        #    lFileType  = llist[0]
+        #    lFieldName = llist[1]
+        #    lQryValue  = llist[2]
+        #    lResIds    = llist[3]
+        #
+        #    if len(lResIds) == 0:
+        #        print "    file type %s field %s qry %s yield no result" % (lFileType, lFieldName, lQryValue)
+        #        resIds = set()
+        #        break
+        #
+        #    if resIds is None:
+        #        print "    file type %s field %s qry %s len %d is first result" % (lFileType, lFieldName, lQryValue, len(lResIds))
+        #        resIds = set(lResIds)
+        #    else:
+        #        print "    file type %s field %s qry %s len %d . intersecting (%d)" % (lFileType, lFieldName, lQryValue, len(lResIds), len(resIds))
+        #        resIds = set(resIds).intersection(set(lResIds))
+        #        print "    file type %s field %s qry %s len %d . intersected  (%d)" % (lFileType, lFieldName, lQryValue, len(lResIds), len(resIds))
+        #
+        #    if len(resIds) == 0:
+        #        print "    colapsed to length 0"
+        #        break
 
         print "    final list has %d entries" % (len(resIds))
 

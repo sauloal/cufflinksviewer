@@ -11,7 +11,7 @@ import transcript
 import joiner
 import indexer
 
-from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, make_response
+from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, make_response, jsonify
 from contextlib import closing
 
 
@@ -81,7 +81,7 @@ def initial():
 
 
 
-@app.route('/query/<int:page>', methods=['POST'])
+@app.route('/query/<int:page>', methods=['POST', 'PUT'])
 def query(page):
     sessionId = time.time()
     if session.get('id'):
@@ -93,12 +93,11 @@ def query(page):
 
 
     qry = {}
-    if request.method == 'POST':
-        print "POST method %s" % (request.form)
-        qrystr = request.form.keys()[0]
-        print "query string %s" % qrystr
-        qry = jsonpickle.decode(qrystr)
-        print "qry structure", qry
+
+    qrystr = request.form.keys()[0]
+    print "query string %s" % qrystr
+    qry = jsonpickle.decode(qrystr)
+    print "qry structure", qry
 
     res = queryBuffer(sessionId, qry)
 
@@ -120,15 +119,22 @@ def query(page):
 
         print "  count %d page %d max page %d perc %d%% begin pos %d" % (count, page, maxPage, perc, beginPos)
 
-        resPage  = getResultForPage(res, page, PER_PAGE, count)
-        resKeys  = resPage.keys()
-        resKeys.sort(key=transcript.sortNode)
 
-        resTemp = render_template('response.html', page=page, count=count, maxPage=maxPage, perc=perc, beginPos=beginPos, resPage=resPage, resKeys=resKeys);
-        return resTemp
+        if request.method == 'POST':
+            resPage  = getResultForPage(res, page, PER_PAGE, count)
+            resKeys  = resPage.keys()
+            resKeys.sort(key=transcript.sortNode)
+
+            resTemp = render_template('response.html', page=page, count=count, maxPage=maxPage, perc=perc, beginPos=beginPos, resPage=resPage, resKeys=resKeys);
+            return resTemp
+        elif request.method == 'PUT':
+            return make_response(jsonpickle.encode(res))
     else:
-        resTemp = make_response("No match for query")
-        return resTemp
+        if request.method == 'POST':
+            resTemp = make_response("No match for query")
+            return resTemp
+        elif request.method == 'PUT':
+            return make_response(jsonpickle.encode(res))
 
 
 #APPLICATION CODE :: ACESSORY FUNCTIONS

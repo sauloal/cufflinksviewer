@@ -11,22 +11,30 @@
     </p>
 </div>
 
+
 <div class="progress span6 offset3" style="min-height: 5pt; max-height: 5pt">
     <div class="bar" style="width: {{ perc }}%;"></div>
 </div>
 
-<hr>
+
+{% if page > 0 and not full -%}
+<i class="icon-fullscreen pull-right" title="Full Screen"             onclick="sendQuery({{ page }}, 'theWindow')"></i>
+<i class="icon-asterisk   pull-right" title="Show ALL in Full Screen" onclick="sendQuery(0, 'theWindow')"></i>
+<i class="icon-file       pull-right" title="Download Pdf"            onclick="sendQuery(0, 'theWindow', true)"></i>
+<!--< id="full" class="btn" rel="popover" data-content="Full Screen" data-original-title="help" title="help">-->
 
 {% include 'paginator.html' -%}
+{% endif -%}
 
-<i class="icon-picture" dst="statsgraph"></i>
+
+<i class="icon-picture" dst="statsgraph" title="show/hide all graphics"></i>
 
 {% for page in resKeys -%}
     {% set transcriptData = resPage[page] -%}
-    {% set pageshort = page.replace("-", "").replace("_", "").replace(".", "") %}
+    {% set pageshort = page.replace("-", "").replace("_", "").replace(".", "") -%}
     <div class="row-fluid">
         <div class="span12">
-            <h4>{{ beginPos + loop.index }}: {{ page }} <i class="icon-chevron-down" dst="row{{ pageshort }}"></i> <i class="icon-picture" dst="row{{ pageshort }}statsgraph"></i> <small>(category: {{ transcriptData.stats['category'] }})</small></h4>
+            <h4>{{ beginPos + loop.index }}: {{ page }} <i class="icon-chevron-down" dst="row{{ pageshort }}" title="show/hide data"></i> <i class="icon-picture" dst="row{{ pageshort }}statsgraph" title="show/hide graphic"></i> <small>(category: {{ transcriptData.stats['category'] }})</small></h4>
         </div>
     </div> <!-- end header row -->
     <div class="row-fluid graph graphbig" id="row{{ pageshort }}statsgraph"> <!-- start vals row graph-->
@@ -40,7 +48,7 @@
             <div class="span11 offset1 stats">
                 <div class="row-fluid">
                     <div class="span12">
-                        <h4>Stats <i class="icon-chevron-down" dst="row{{ pageshort }}stats"></i></h4>
+                        <h4>Stats <i class="icon-chevron-down" dst="row{{ pageshort }}stats" title="show/hide stats"></i></h4>
                     </div>
                 </div>
                 {% include "stats.html" -%}
@@ -48,12 +56,12 @@
         </div>
 
         {% for transcriptName in transcriptData.getTranscripts() -%}
-            {% set transcriptNameShort = transcriptName.replace("-", "").replace("_", "").replace(".", "") %}
+            {% set transcriptNameShort = transcriptName.replace("-", "").replace("_", "").replace(".", "") -%}
             <div class="row-fluid">
                 <div class="span11 offset1 transcripts">
                     <div class="row-fluid">
                         <div class="span12">
-                            <h4>Transcript: {{ transcriptName }} <i class="icon-chevron-down" dst="row{{ pageshort }}{{ transcriptNameShort }}"></i> <small>Sample: {{ transcriptData.getSampleName(transcriptName) }}</small></h4>
+                            <h4>Transcript: {{ transcriptName }} <i class="icon-chevron-down" dst="row{{ pageshort }}{{ transcriptNameShort }}" title="show/hide transcript"></i> <small>Sample: {{ transcriptData.getSampleName(transcriptName) }}</small></h4>
                         </div>
                     </div>
                     {% include "transcripts.html" -%}
@@ -61,12 +69,11 @@
             </div>
         {% endfor -%}
     </div>
-
 {% endfor -%}
 
+
+{% if page > 0 and not full -%}
 {% include 'paginator.html' -%}
-
-
 <script>
     $(document).ready(function(){
         $("div.rowresults").each(function(){ $(this).css('display', 'none')});
@@ -75,3 +82,100 @@
         $("div.rowdata"   ).each(function(){ $(this).css('display', 'none')});
     });
 </script>
+{% endif -%}
+
+<script>
+
+        $(document).on('click', "#result i[class=icon-chevron-up]", function(){
+            var tgt = $(this).attr("dst");
+            //alert("click up: " + tgt);
+            $("div[id=" + tgt + "]").each(function(data){
+                //$(this).css('display', 'none');
+                $(this).toggle("medium");
+            });
+            //$("#" + tgt).html('clicked up');
+            $(this).attr("class", "icon-chevron-down");
+        });
+
+        $(document).on('click', "#result i[class=icon-chevron-down]", function(){
+            var tgt = $(this).attr("dst");
+            //alert("click down: " + tgt);
+            $("div[id=" + tgt + "]").each(function(data){
+                //$(this).css('display', 'block');
+                $(this).toggle("medium");
+            });
+            //$("#" + tgt).html('clicked down');
+            $(this).attr("class", "icon-chevron-up");
+        });
+
+        $(document).on('click', "#result i[class=icon-picture]", function(){
+            var tgt = $(this).attr("dst");
+            $("div[id$="+tgt+"]").each(function(data){
+                $(this).toggle("medium");
+            });
+        });
+
+</script>
+
+
+
+<style>
+    .stats {
+        background-color: #EEEEEE;
+    }
+    .transcripts {
+        background-color: #CDCDCD;
+    }
+
+    .keyname {
+        font-weight: bold;
+        margin: 0;
+        padding: 0;
+    }
+    .h6big{
+        font-size: medium;
+        text-decoration: underline;
+    }
+
+    /*.graphbig{
+        display: block;
+    }
+
+    .graphsmall{
+        display: none;
+    }*/
+
+    p.flash{
+        text-align: center;
+    }
+
+    .fileTypeexons{
+        background-color: #FFFACD;
+    }
+    .regNumexons1{
+        background-color: #FFFACD;
+    }
+    .regNumexons2{
+        background-color: #EEE9BF;
+    }
+    .regNumexons3{
+        background-color: #CDC9A5;
+    }
+
+    .fileTypeexpression{
+        background-color: #BFEFFF;
+    }
+    .regNumexpression1{
+        background-color: #BFEFFF;
+    }
+    .regNumexpression2{
+        background-color: #B2DFEE;
+    }
+    .regNumexpression3{
+        background-color: #9AC0CD;
+    }
+</style>
+
+
+
+<textarea id="ta" name="ẗa" rows="15" cols="400" class="span12" style="display: none"></textarea>

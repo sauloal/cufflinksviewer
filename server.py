@@ -10,6 +10,7 @@ import jsonpickle
 import transcript
 import joiner
 import indexer
+from pdfs import create_pdf
 
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, make_response, jsonify
 from contextlib import closing
@@ -76,12 +77,12 @@ def initial():
         session['id'] = sessionId
         print "storing new ID %s" % (sessionId)
 
-    resTemp = render_template('index.html')
+    resTemp = render_template('display_normal.html')
     return resTemp
 
-
-
-@app.route('/query/<int:page>', methods=['POST', 'PUT'])
+@app.route('/query/full/pdf/<int:page>', methods=['POST', 'PUT'])
+@app.route('/query/full/<int:page>',     methods=['POST',      ])
+@app.route('/query/<int:page>',          methods=['POST', 'PUT'])
 def query(page):
     sessionId = time.time()
     if session.get('id'):
@@ -106,35 +107,59 @@ def query(page):
     flash(formatQuery(qry))
 
     if count > 0:
-        maxPage  = count/PER_PAGE
-
-        if float(count)/PER_PAGE > maxPage:
-            maxPage += 1
-
-        if page > maxPage:
-            page = maxPage
-
-        perc     = int((float(page) / maxPage) * 100)
-        beginPos = (page  - 1) * PER_PAGE
-
-        print "  count %d page %d max page %d perc %d%% begin pos %d" % (count, page, maxPage, perc, beginPos)
-
-
         if request.method == 'POST':
-            resPage  = getResultForPage(res, page, PER_PAGE, count)
+            maxPage  = count/PER_PAGE
+
+            if float(count)/PER_PAGE > maxPage:
+                maxPage += 1
+
+            if page > maxPage:
+                page = maxPage
+
+            perc     = int((float(page) / maxPage) * 100)
+            beginPos = (page  - 1) * PER_PAGE
+
+            print "  count %d page %d max page %d perc %d%% begin pos %d" % (count, page, maxPage, perc, beginPos)
+
+            resPage = res
+
+            templateFile = 'response.html'
+            full         = False
+            if str(request.path).startswith("/query/full"):
+                print "      template display full"
+                templateFile = 'display_full.html'
+                full         = True
+
+            if page > 0:
+                resPage  = getResultForPage(res, page, PER_PAGE, count)
+
             resKeys  = resPage.keys()
             resKeys.sort(key=transcript.sortNode)
 
-            resTemp = render_template('response.html', page=page, count=count, maxPage=maxPage, perc=perc, beginPos=beginPos, resPage=resPage, resKeys=resKeys);
-            return resTemp
+            resTemp = render_template(templateFile, page=page, count=count, maxPage=maxPage, perc=perc, beginPos=beginPos, resPage=resPage, resKeys=resKeys, full=full);
+
+            if str(request.path).startswith("/query/full/pdf"):
+                print "      template display full PDF"
+                pdf = create_pdf(resTemp)
+                return pdf
+            else:
+                return resTemp
+
         elif request.method == 'PUT':
             return make_response(jsonpickle.encode(res))
+
     else:
         if request.method == 'POST':
-            resTemp = make_response("No match for query")
-            return resTemp
+            if str(request.path).startswith("/query/full"):
+                resTemp = make_response("No match for query")
+                return resTemp
+            else:
+                resTemp = make_response("No match for query")
+                return resTemp
         elif request.method == 'PUT':
             return make_response(jsonpickle.encode(res))
+
+
 
 
 #APPLICATION CODE :: ACESSORY FUNCTIONS

@@ -1,10 +1,7 @@
-
-<textarea id="ta" name="ẗa" rows="15" cols="400" class="span12" style="display: none"></textarea>
-
 <div id="result"></div>
 
 <script>
-    function sendQuery(page) {
+    function sendQuery( page, dstPage, pdf ) {
         if (null == page) {
             page = 1;
         }
@@ -32,106 +29,36 @@
             };
         });
 
-        var dstLink    = "/query/" + page + "";
+
         var payload    = JSON.stringify(opts);
 
-        $("#ta").val($("#ta").val() + "\nDST LINK: " + dstLink);
+
         $("#ta").val($("#ta").val() + "\nPAYLOAD: "  + payload);
 
-        $('#result').html("<b>Querying ...</b>");
-        $.post(dstLink, payload,
-               function(data) {
-                    $('#result').html(data);
-                    //$("#ta").val($("#ta").val() + "\n" + data);
-                });
+        if ( null == dstPage ) {
+            $('#result').html("<b>Querying ...</b>");
+            var dstLink    = "/query/" + page + "";
+            $("#ta").val($("#ta").val() + "\nDST LINK: " + dstLink);
+
+            $.post(dstLink, payload,
+                function(data) {
+                     $('#result').html(data);
+                     //$("#ta").val($("#ta").val() + "\n" + data);
+                 });
+        } else {
+            var dstLink    = "/query/full/" + page + "";
+            if ( null != pdf && pdf ) {
+                dstLink    = "/query/full/pdf/" + page + "";
+            }
+            
+            $("#ta").val($("#ta").val() + "\nDST LINK: " + dstLink);
+
+            $.post(dstLink, payload,
+                function(data) {
+                    var win = window.open('', dstPage);
+                     win.document.write(data);
+                     //$("#ta").val($("#ta").val() + "\n" + data);
+                 });
+        }
     }
-
-
-    $(document).ready(function(){
-        $(document).on('click', "#result i[class=icon-chevron-up]", function(){
-            var tgt = $(this).attr("dst");
-            //alert("click up: " + tgt);
-            $("div[id=" + tgt + "]").each(function(data){
-                //$(this).css('display', 'none');
-                $(this).toggle("medium");
-            });
-            //$("#" + tgt).html('clicked up');
-            $(this).attr("class", "icon-chevron-down");
-        });
-
-        $(document).on('click', "#result i[class=icon-chevron-down]", function(){
-            var tgt = $(this).attr("dst");
-            //alert("click down: " + tgt);
-            $("div[id=" + tgt + "]").each(function(data){
-                //$(this).css('display', 'block');
-                $(this).toggle("medium");
-            });
-            //$("#" + tgt).html('clicked down');
-            $(this).attr("class", "icon-chevron-up");
-        });
-
-        $(document).on('click', "#result i[class=icon-picture]", function(){
-            var tgt = $(this).attr("dst");
-            $("div[id$="+tgt+"]").each(function(data){
-                $(this).toggle("medium");
-            });
-        });
-    });
 </script>
-
-<style>
-    .stats {
-        background-color: #EEEEEE;
-    }
-    .transcripts {
-        background-color: #CDCDCD;
-    }
-
-    .keyname {
-        font-weight: bold;
-        margin: 0;
-        padding: 0;
-    }
-    .h6big{
-        font-size: medium;
-        text-decoration: underline;
-    }
-
-    /*.graphbig{
-        display: block;
-    }
-
-    .graphsmall{
-        display: none;
-    }*/
-
-    p.flash{
-        text-align: center;
-    }
-
-    .fileTypeexons{
-        background-color: #FFFACD;
-    }
-    .regNumexons1{
-        background-color: #FFFACD;
-    }
-    .regNumexons2{
-        background-color: #EEE9BF;
-    }
-    .regNumexons3{
-        background-color: #CDC9A5;
-    }
-
-    .fileTypeexpression{
-        background-color: #BFEFFF;
-    }
-    .regNumexpression1{
-        background-color: #BFEFFF;
-    }
-    .regNumexpression2{
-        background-color: #B2DFEE;
-    }
-    .regNumexpression3{
-        background-color: #9AC0CD;
-    }
-</style>

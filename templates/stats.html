@@ -1,25 +1,24 @@
 <div class="row-fluid rowdata" id="row{{ pageshort }}stats"> <!-- start vals row 1 -->
-{% set counter = 0 %}
-{% for k in transcriptData.stats: %}
-    {% if (counter % 7) == 0 %}
-        {% if counter != 0 %}
+{% set counter = 0 -%}
+{% for k in transcriptData.stats: -%}
+    {% if (counter % 7) == 0 -%}
+        {% if counter != 0 -%}
     </div> <!-- end vals row 1 -->
 
     <div class="row-fluid"> <!-- start vals row 2-->
-        {% endif %}
-    {% endif %}
+        {% endif -%}
+    {% endif -%}
 
 
 
-        {% if k != "graphText" %}
+        {% if k != "graphText" -%}
     <div class="span2"> <!-- start dial cell -->
         <p class="keyname">{{ k }}</p>
         {{ transcriptData.stats[k] }}
     </div>
-        {% endif %}
+        {% endif -%}
 
-    {% set counter = counter + 1 %}
-{% endfor %}
+    {% set counter = counter + 1 -%}
+{% endfor -%}
 
 </div> <!-- end vals row graph -->
-

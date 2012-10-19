@@ -1,0 +1,13 @@
+{% extends 'index.html' -%}
+
+    {% block body -%}
+    {% include 'titlebar.html' -%}
+
+    <div class="container">
+        {% include 'dials.html' -%}
+        <hr>
+        {% include 'display.html' -%}
+        <hr>
+    </div> <!-- /container -->
+
+    {% endblock -%}

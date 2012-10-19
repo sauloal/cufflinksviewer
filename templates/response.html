@@ -20,7 +20,7 @@
 {% if page > 0 and not full -%}
 <i class="icon-fullscreen pull-right" title="Full Screen"             onclick="sendQuery({{ page }}, 'theWindow')"></i>
 <i class="icon-asterisk   pull-right" title="Show ALL in Full Screen" onclick="sendQuery(0, 'theWindow')"></i>
-<i class="icon-file       pull-right" title="Download Pdf"            onclick="sendQuery(0, 'theWindow', true)"></i>
+<!--<i class="icon-file       pull-right" title="Download Pdf"            onclick="sendQuery(0, 'theWindow', true)"></i>-->
 <!--< id="full" class="btn" rel="popover" data-content="Full Screen" data-original-title="help" title="help">-->
 
 {% include 'paginator.html' -%}

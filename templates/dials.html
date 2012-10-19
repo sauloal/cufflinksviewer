@@ -1,4 +1,5 @@
 {% set spansize = "input-large" -%}
+
 <div class="tab-content">
     {% for filetype in g.headersNames -%}
         <div class="tab-pane" id="{{ filetype }}">
@@ -185,3 +186,4 @@
 
 <button class="btn btn-medium btn-primary pull-right" type="button" onclick="sendQuery()">Query</button>
 <button class="btn btn-medium btn-primary pull-right" type="button" onclick="window.location.reload()">Reset</button>
+

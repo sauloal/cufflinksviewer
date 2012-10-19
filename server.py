@@ -9,6 +9,7 @@ import simplejson
 import jsonpickle
 import transcript
 import joiner
+import indexer
 
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, make_response
 from contextlib import closing
@@ -388,6 +389,10 @@ def getDb():
     return [db, headers, queries]
 
 if __name__ == '__main__':
-    if not os.path.exists(joiner.dbfile) or not os.path.exists(joiner.indexfile):
+    if not os.path.exists(joiner.dbfile):
         joiner.main()
+
+    if not os.path.exists(joiner.indexfile):
+        indexer.main()
+
     app.run(port=PORT)

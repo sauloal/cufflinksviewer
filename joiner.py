@@ -22,6 +22,8 @@ if not os.path.exists(setupfile):
 for k,v in jsonpickle.decode(open(setupfile, 'r').read())['joiner'].items():
 	globals()[k] = v
 
+indexfile = dbfile + ".index.json"
+
 #print globals()
 #sys.exit(0)
 #base             = '../Analysis/Analysis/Expression'
@@ -60,9 +62,9 @@ def main():
     with open(dbfile, 'w') as f:
         f.write(jsonp)
 
-    jsonq = jsonpickle.encode(transcript.getIndex(datas))
-    with open(indexfile, 'w') as f:
-        f.write(jsonq)
+#    jsonq = jsonpickle.encode(transcript.getIndex(datas))
+#    with open(indexfile, 'w') as f:
+#        f.write(jsonq)
 
 def loadExpFile(filename, sampleName, keyHash):
     #trans_id    bundle_id    chr    left    right    FPKM    FMI    frac    FPKM_conf_lo    FPKM_conf_hi    coverage    length    Contig    Contig_length    Accession1    Description1    eval1    Accession2    Description2    eval2

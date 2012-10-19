@@ -5,7 +5,6 @@
         "gtfName"          : "transcripts.gtf",
         "inputAnnoTabFile" : "rnaSeq\/input\/ANNO.tab",
         "dbfile"           : "db.json",
-        "indexfile"        : "index.json",
         "sampleFolders"    :    [
                                 ["CONTROL", "S01"],
                                 ["PRIMED",  "S02"]

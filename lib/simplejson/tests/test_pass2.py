@@ -1,1 +1,0 @@
-../../../../../share/pyshared/simplejson/tests/test_pass2.py

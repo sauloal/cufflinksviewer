@@ -1,6 +1,6 @@
 {
     "joiner": {
-        "base"             : "..\/Analysis\/Analysis\/Expression",
+        "base"             : "Analysis\/Analysis\/Expression",
         "expressionName"   : "transcripts_annotated.expr.csv",
         "gtfName"          : "transcripts.gtf",
         "inputAnnoTabFile" : "rnaSeq\/input\/ANNO.tab",

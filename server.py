@@ -270,7 +270,7 @@ def getResult(db, headers, qry):
                         for i in range(len(indexRes)):
                             indexKey = indexRes[i][0]
                             indexVal = indexRes[i][1]
-                            if indexKey.contains(qryValue):
+                            if indexKey.find(qryValue) != -1:
                                 qryRes = indexVal
                                 lLists.extend(qryRes)
                         lists.append([filetype, fieldname, qryValue, set(lLists)])

@@ -32,7 +32,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/assembly/progs/flask/rnaseqviewer/python/venvlin"
+set -gx VIRTUAL_ENV "/home/saulo/Dropbox/cufflinksviewer/venvlin"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

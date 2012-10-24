@@ -16,9 +16,6 @@ EXAMPLE:
 
 <img src="https://raw.github.com/sauloal/cufflinksviewer/master/help/002.png"/>
 
-<img src="https://raw.github.com/sauloal/cufflinksviewer/master/help/003.png"/>
-
-
 TODO:
 =====
 

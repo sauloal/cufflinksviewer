@@ -1,3 +1,5 @@
+![DOI](https://zenodo.org/badge/4998/sauloal/cufflinksviewer.svg "DOI")
+
 #V1.0
 
 Edit setup.json pointing to your files.
